@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul style="margin:40px 0" class="collection with-header">
+    <li class="collection-header">
+        <h4>
+            申请书详情
+        </h4>
+    </li>
+    <li class="collection-item">        
+        <div class="row" style="margin:20px 0">
+            <div class=" col s12">
+                <p id="applicant">申请人：{{ apply.applicant }}</p>
+            </div>
+        </div>
+    </li>
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class=" col s12">
+                <p id="status">状态：{{ apply.status_str }}</p>
+                
+            </div>
+        </div>
+    </li>
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class=" col s12">
+                <p id="device_type">设备类型：{{ apply.device_type }}</p>
+                
+            </div>
+        </div>
+    </li>
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class=" col s12">
+                <p id="model">型号（规格）：{{ apply.model }}</p>
+            </div>
+        </div>
+    </li>   
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class=" col s12">
+                <p id="manufacturer">生产商：{{ apply.manufacturer }}</p>
+            </div>
+        </div>
+    </li>   
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class=" col s6">
+                <P id="unit_price">单价（元）：{{ apply.unit_price }}</P>
+            </div>
+            <div class=" col s6">
+                <p  id="count">数量：{{ apply.count }}</p>
+            </div>
+        </div>
+    </li>
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class="col s12">
+                <p id="reason">原因: {{ apply.reason }}</p>
+            </div>
+        </div>
+    </li>
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class=" col s6">
+                <P id="date">申请日期：{{ apply.apply_at }}</P>
+            </div>
+            {% if apply.status == 1 or apply.status == 2 %}
+                <div class=" col s6">
+                    <p>审核日期：{{ apply.accept_at }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </li>
+    
+    {% if apply.status == 2 %}
+    <li class="collection-item">
+        <div class="row" style="margin:20px 0">
+            <div class=" col s12">
+                <p>完成日期：{{ apply.finish_at }}</p>
+            </div>
+        </div>
+    </li>
+    
+    {% endif %}
+</ul>
+<div class="row">
+    {% if apply.status == 0 %}
+        <div class="col s6" style="text-align:center">
+            <button id="accept" style="width:40%" class="waves-effect waves-light btn">接受申请</button>
+        </div>
+        <div class="col s6" style="text-align:center">
+            <button id="refuse" style="width:40%;background:#F0F0F0;color:#555" class="waves-effect waves-light btn">拒绝申请</button>
+        </div>
+        <script>
+            $("#accept").click(function(){
+                $.post('/apply/{{apply.id}}/accept',
+                {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                function(data,status){
+                    window.location.reload()
+                });
+            })
+            $("#refuse").click(function(){
+                $.post('/apply/{{apply.id}}/refuse',
+                {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                function(data,status){
+                    window.location.reload()
+                });
+            })
+        </script>
+    {% endif %}
+    {% if apply.status == 1 %}
+        <div class="col s12" style="text-align:center">
+            <button id="finish" style="width:40%" class="waves-effect waves-light btn">完成申请</button>
+        </div>
+        <script>
+            $("#finish").click(function(){
+                $.post('/apply/{{apply.id}}/finish',
+                {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                function(data,status){
+                    window.location.reload()
+                });
+            })
+        </script>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h4 style="text-align:center">维修记录</h4> 
+    <!-- <a href="/repair/add" style="position:fixed;right:40px;bottom:40px" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+     -->
+    <table class="bordered highlight centered">
+        <thead>
+            <tr>
+            <th>维修记录编号</th>
+            <th>维修设备</th>
+            <th>状态</th>
+            <th>维修费用</th>
+            <th>负责人</th>
+            <th>修理厂商</th>
+
+            <th>开始日期</th>
+            <th>结束日期</th>
+            <th>详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for repair in repair_list %}
+            <tr>
+                <td>{{ repair.id }}</td>
+                <td><a href="/device/{{ repair.device.id }}">{{ repair.device }}</a></td>
+                <td>{{ repair.status_str }}</td>
+                <td>{{ repair.price }}</td>
+                <td>{{ repair.person_in_charge }}</td>
+                
+                <td>{{ repair.repair_manufacturer }}</td>
+                <td>{{ repair.start_at }}</td>
+                <td>{{ repair.finish_at }}</td>
+                <td><a href="/repair/{{ repair.id }}" title="查看" class="btn-floating green"><i class="material-icons">visibility</i></a></td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination" style="width:300px;margin: 20px auto;text-align:center">
+        <span class="step-links">
+            {% if repair_list.has_previous %}
+                <a href="?page=1">&laquo; 首页</a>
+                <a href="?page={{ repair_list.previous_page_number }}">上一页</a>
+            {% endif %}
+    
+            <span class="current">
+                第 {{ repair_list.number }} 页，共 {{ repair_list.paginator.num_pages }}页
+            </span>
+    
+            {% if repair_list.has_next %}
+                <a href="?page={{ repair_list.next_page_number }}">下一页</a>
+                <a href="?page={{ repair_list.paginator.num_pages }}">尾页 &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}

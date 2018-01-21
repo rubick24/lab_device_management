@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h4>申请新的实验设备</h4>
+<form method="post" action="/apply/add">
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="applicant" name="applicant" type="text" class="validate">
+            <label for="applicant">申请人</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="name" name="name" type="text" class="validate">
+            <label for="name">申请设备命名</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="device_type" name="device_type" type="text" class="validate">
+            <label for="device_type">设备类型</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="model" name="model" type="text" class="validate">
+            <label for="model">型号（规格）</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="manufacturer" name="manufacturer" type="text" class="validate">
+            <label for="manufacturer">生产商</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s6">
+            <input  id="unit_price" name="unit_price" type="number" class="validate">
+            <label for="unit_price">单价（元）</label>
+        </div>
+        <div class="input-field col s6">
+            <input  id="count" name="count" type="number" min="1" step="1" class="validate">
+            <label for="count">数量</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <textarea id="reason" name="reason" class="materialize-textarea"></textarea>
+            <label for="reason">申请原因</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12" style="text-align:center">
+            <button style="width:40%" class="btn waves-effect waves-light" type="submit" name="action">
+                提交申请
+            </button>
+        </div>
+    </div>
+    {% csrf_token %}
+</form>
+{% endblock %}

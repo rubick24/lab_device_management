@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h5>新增维修记录：设备[ {{ device.name }} ]</h5>
+<form method="post" action="/device/{{ device.id }}/repair">
+    <!-- <input id="device_id" name="device_id" value="{{ device.id }}"  type="hidden"> -->
+    {% csrf_token %}
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="price" name="price" type="text" class="validate">
+            <label for="price">维修费用</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="person_in_charge" name="person_in_charge" type="text" class="validate">
+            <label for="person_in_charge">维修负责人</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input  id="repair_manufacturer" name="repair_manufacturer" type="text" class="validate">
+            <label for="repair_manufacturer">维修厂家</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12" style="text-align:center">
+            <button style="width:40%" class="btn waves-effect waves-light" type="submit" name="action">
+                确定
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}

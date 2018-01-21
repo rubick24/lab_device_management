@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h4 style="text-align:center">当前申请表</h4> 
+    <a href="/apply/add" style="position:fixed;right:40px;bottom:40px" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+    <form id='search' method="GET" action="#">
+        <div class="row" style="text-align:right">
+            <div class="input-field col s6 offset-s6 m3 offset-m9">
+                <input id="query" type="text" class="validate">
+                <label for="query">按条件查找</label>
+            </div>
+        </div>
+    </form>
+    <table class="bordered highlight centered">
+        <thead>
+            <tr>
+            <th>申请书编号</th>
+            <th>申请人</th>
+            <th>设备类型</th>
+            <th>单价</th>
+            <th>状态</th>
+            <th>数量</th>
+            <th>申请日期</th>
+            <th>审核日期</th>
+            <th>详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for apply in apply_list %}
+            <tr>
+                <td>{{ apply.id }}</td>
+                <td>{{ apply.applicant }}</td>
+                <td>{{ apply.device_type }}</td>
+                <td>{{ apply.unit_price }}</td>
+                <td>{{ apply.status_str }}</td>
+                <td>{{ apply.count }}</td>
+                <td>{{ apply.apply_at }}</td>
+                <td>{{ apply.accept_at }}</td>
+                <td><a href="/apply/{{ apply.id }}">查看</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination" style="width:300px;margin: 20px auto;text-align:center">
+        <span class="step-links">
+            {% if apply_list.has_previous %}
+                <a href="?page=1">&laquo; 首页</a>
+                <a href="?page={{ apply_list.previous_page_number }}">上一页</a>
+            {% endif %}
+    
+            <span class="current">
+                第 {{ apply_list.number }} 页，共 {{ apply_list.paginator.num_pages }}页
+            </span>
+    
+            {% if apply_list.has_next %}
+                <a href="?page={{ apply_list.next_page_number }}">下一页</a>
+                <a href="?page={{ apply_list.paginator.num_pages }}">尾页 &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}

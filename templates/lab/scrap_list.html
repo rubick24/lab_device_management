@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h4 style="text-align:center">报废记录</h4> 
+    <table class="bordered highlight centered">
+        <thead>
+            <tr>
+            <th>报废记录编号</th>
+            <th>报废设备</th>
+            <th>报废原因</th>
+            <th>报废日期</th>
+            <th>详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scrap in scrap_list %}
+            <tr>
+                <td>{{ scrap.id }}</td>
+                <td><a href="/device/{{ scrap.device.id }}">{{ scrap.device }}</a></td>
+                <td>{{ scrap.reason }}</td>
+                <td>{{ scrap.scrap_at }}</td>
+                <td><a href="/scrap/{{ scrap.id }}" title="查看" class="btn-floating green"><i class="material-icons">visibility</i></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination" style="width:300px;margin: 20px auto;text-align:center">
+        <span class="step-links">
+            {% if scrap_list.has_previous %}
+                <a href="?page=1">&laquo; 首页</a>
+                <a href="?page={{ scrap_list.previous_page_number }}">上一页</a>
+            {% endif %}
+    
+            <span class="current">
+                第 {{ scrap_list.number }} 页，共 {{ scrap_list.paginator.num_pages }}页
+            </span>
+    
+            {% if scrap_list.has_next %}
+                <a href="?page={{ scrap_list.next_page_number }}">下一页</a>
+                <a href="?page={{ scrap_list.paginator.num_pages }}">尾页 &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>实验室设备管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+</head>
+<body>
+    <nav>
+    <div class="nav-wrapper">
+        <a href="/" title="主页" class="brand-logo" style="padding-left:25px">实验室设备管理系统</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            {% if request.user.is_authenticated %}
+                <li><a href="/device">设备</a></li>
+                <li><a href="/repair">报修记录</a></li>
+                <li><a href="/scrap">报废记录</a></li>
+                <li><a href="/apply">设备申请列表</a></li>
+                <li><a href="/apply/add">申请新设备</a></li>
+                <li>
+                    <a href="/logout" title="退出登录" style="display:inline-flex" onMouseOver="this.style.color='#000000'" onMouseOut="this.style.color='#FFF'">
+                        <span style="padding:0 10px 0 5px">{{ request.user.username }}</span>
+                        <i class="material-icons">exit_to_app</i>
+                    </a>
+                </li>
+                
+            {% else %}
+                <li><a href="/login">登录</a></li>
+                <li><a href="/register">注册</a></li>
+            {% endif %}
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            {% if request.user.is_authenticated %}
+                <li><a href="/device">设备</a></li>
+                <li><a href="/repair">报修记录</a></li>
+                <li><a href="/scrap">报废记录</a></li>
+                <li><a href="/apply">设备申请列表</a></li>
+                <li><a href="/apply/add">申请新设备</a></li>
+                <li><a href="/logout">退出登录</a></li>
+            {% else %}
+                <li><a href="/login">登录</a></li>
+                <li><a href="/register">注册</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    </nav>
+    <script>$(".button-collapse").sideNav();</script>
+
+    <div class="container" style="padding-top:30px">
+        <div class="row">
+            <div class="col s12">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

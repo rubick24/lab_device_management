@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h5>报废设备：[ {{ device.name }} ]</h5>
+<form method="post" action="/device/{{ device.id }}/scrap">
+    <!-- <input id="device_id" name="device_id" value="{{ device.id }}"  type="hidden"> -->
+    {% csrf_token %}
+    <div class="row">
+        <div class="input-field col s12">
+            <textarea id="reason" name="reason" class="materialize-textarea"></textarea>
+            <label for="reason">报废原因</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="input-field col s12" style="text-align:center">
+            <button style="width:40%" class="btn waves-effect waves-light" type="submit" name="action">
+                确定
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}

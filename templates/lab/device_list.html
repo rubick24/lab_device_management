@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h4 style="text-align:center">实验室设备列表</h4>
+    <form id='search' method="GET" action="#">
+        <div class="row" style="text-align:right">
+            <div class="input-field col s6 offset-s6 m3 offset-m9">
+                <input id="query" type="text" class="validate">
+                <label for="query">按条件查找</label>
+            </div>
+        </div>
+    </form>
+    <script>
+        $("#search").submit(function(e){
+            e.preventDefault()
+            $(location).attr('href', '/device/?'+$("#query").val());
+        })
+    </script>
+    <table class="bordered highlight centered">
+        <thead>
+            <tr>
+            <th>设备编号</th>
+            <th>设备名称</th>
+            <th>设备类型</th>
+            <th>型号</th>
+            <th>状态</th>
+            <th>经办人</th>
+            <th>生产商</th>
+            <th>购置日期</th>
+            <th>报废日期</th>
+            <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in device_list %}
+            <tr>
+                <td>{{ device.id }}</td>
+                <td>{{ device.name }}</td>
+                <td>{{ device.device_type }}</td>
+                <td>{{ device.model }}</td>
+                <td title="{{ device.status_str }}">
+                    {% if device.status == 0 %}
+                        <i class="material-icons" style="color:#4CAF50">check</i>
+                    {% elif device.status == 1 %}
+                        <i class="material-icons" style="color:#ffeb3b">error_outline</i>
+                    {% elif  device.status == 2  %}
+                        <i class="material-icons" style="color:#F44336">error</i>
+                    {% endif %}
+                </td>
+                <td>{{ device.manager }}</td>
+                <td>{{ device.manufacturer }}</td>
+                <td>{{ device.purchase_at.date }}</td>
+                <td>{{ device.scrap_at.date }}</td>
+                <td>
+                    <ul>
+                        <li style="float:left;padding:3px 5px;"><a href="/device/{{ device.id }}" title="设备详情" class="btn-floating green"><i class="material-icons">visibility</i></a></li>
+                        {% if device.status == 0 %}
+                        <li style="float:left;padding:3px 5px;"><a href="/device/{{ device.id }}/repair" title="维修设备" class="btn-floating yellow"><i class="material-icons">build</i></a></li>
+                        <li style="float:left;padding:3px 5px;"><a href="/device/{{ device.id }}/scrap" title="报废设备" class="btn-floating red"><i class="material-icons">delete</i></a></li>
+                        {% endif %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination" style="width:300px;margin: 20px auto;text-align:center">
+        <span class="step-links">
+            {% if device_list.has_previous %}
+                <a href="?page=1">&laquo; 首页</a>
+                <a href="?page={{ device_list.previous_page_number }}">上一页</a>
+            {% endif %}
+    
+            <span class="current">
+                第 {{ device_list.number }} 页，共 {{ device_list.paginator.num_pages }}页
+            </span>
+    
+            {% if device_list.has_next %}
+                <a href="?page={{ device_list.next_page_number }}">下一页</a>
+                <a href="?page={{ device_list.paginator.num_pages }}">尾页 &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
