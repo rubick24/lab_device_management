@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from django.shortcuts import render,get_object_or_404
 from django.views.generic import ListView,DetailView
 from django.http import HttpResponse,HttpResponseNotAllowed,HttpResponseRedirect,HttpResponseBadRequest
@@ -194,53 +194,60 @@ def apply_detail(request,apply_id):
     return render(request,'lab/apply_detail.html',{'apply':apply})
 
 #接受申请
+#@permission_required('lab.manager_rights')
+
 @login_required()
 @require_http_methods(["POST"])
 def accept_apply(request,apply_id):
-    apply = get_object_or_404(ApplyRecord,pk=apply_id)
-    if apply.status == 0:
-        apply.status = 1
-        apply.accept_at = timezone.now()
-        apply.save()
-        return HttpResponseRedirect('/apply/' + str(apply.id) +"?msg=accept success")
-    else:
-        return HttpResponseBadRequest()
+    if request.user.has_perm('lab.manager_rights'):
+        apply = get_object_or_404(ApplyRecord,pk=apply_id)
+        if apply.status == 0:
+            apply.status = 1
+            apply.accept_at = timezone.now()
+            apply.save()
+            return HttpResponseRedirect('/apply/' + str(apply.id) +"?msg=accept success")
+        
+    return HttpResponseBadRequest()
 
 #拒绝申请
+#@permission_required('lab.manager_rights')
 @login_required()
 @require_http_methods(["POST"])
 def refuse_apply(request,apply_id):
-    apply = get_object_or_404(ApplyRecord,pk=apply_id)
-    if apply.status == 0:
-        apply.status = 3
-        apply.accept_at = timezone.now()
-        apply.save()
-        return HttpResponseRedirect('/apply/' + str(apply.id) +"?msg=refuse success")
-    else:
-        return HttpResponseBadRequest()
+    if request.user.has_perm('lab.manager_rights'):
+        apply = get_object_or_404(ApplyRecord,pk=apply_id)
+        if apply.status == 0:
+            apply.status = 3
+            apply.accept_at = timezone.now()
+            apply.save()
+            return HttpResponseRedirect('/apply/' + str(apply.id) +"?msg=refuse success")
+
+    return HttpResponseBadRequest()
 
 #完成申请
+#@permission_required('lab.manager_rights')
+
 @login_required()
 @require_http_methods(["POST"])
 def finish_apply(request,apply_id):
-    apply = get_object_or_404(ApplyRecord,pk=apply_id)
-    if apply.status == 1:
-        apply.status =2
-        apply.finish_at = timezone.now()
-        apply.save()
-        for i in range(apply.count):
-            device = Device()
-            device.name = apply.name+'-'+str(i+1)
-            device.device_type = apply.device_type
-            device.model = apply.model
-            device.manager = apply.applicant
-            device.manufacturer = apply.manufacturer
-            device.purchase_at = apply.finish_at
-            device.save()
-        return HttpResponseRedirect('/apply/' + str(apply.id) +"?msg=finish success")
-    else:
-        return HttpResponseBadRequest()
-
+    if request.user.has_perm('lab.manager_rights'):
+        apply = get_object_or_404(ApplyRecord,pk=apply_id)
+        if apply.status == 1:
+            apply.status =2
+            apply.finish_at = timezone.now()
+            apply.save()
+            for i in range(apply.count):
+                device = Device()
+                device.name = apply.name+'-'+str(i+1)
+                device.device_type = apply.device_type 
+                device.model = apply.model
+                device.manager = apply.applicant
+                device.manufacturer = apply.manufacturer
+                device.purchase_at = apply.finish_at
+                device.save()
+            return HttpResponseRedirect('/apply/' + str(apply.id) +"?msg=finish success")
+        
+    return HttpResponseBadRequest()
 
 
 # 新增维修记录
@@ -310,23 +317,26 @@ def finish_repair(request,repair_id):
 @login_required()
 @require_http_methods(["GET", "POST"])
 def scrap_add(request,device_id):
-    if request.method == 'GET':
-        device = get_object_or_404(Device,pk=device_id)
-        return render(request,'lab/scrap.html',{'device':device})
-    else:
-        device = get_object_or_404(Device,pk=device_id)
-        form = ScrapForm(request.POST)
-        if form.is_valid():
-            record = Scrap()
-            record.device = device
-            record.scrap_at = timezone.now()
-            record.reason = form.cleaned_data['reason']
-            record.save()
-            device.status = 2
-            device.save()
-            return HttpResponseRedirect('/scrap/'+str(record.id)+'?msg=scrap success')
+    if request.user.has_perm('lab.manager_rights'):
+        if request.method == 'GET':
+            device = get_object_or_404(Device,pk=device_id)
+            return render(request,'lab/scrap.html',{'device':device})
         else:
-            return HttpResponseRedirect('/device/'+str(device.id)+'/scrap?msg='+str(form.errors))
+            device = get_object_or_404(Device,pk=device_id)
+            form = ScrapForm(request.POST)
+            if form.is_valid():
+                record = Scrap()
+                record.device = device
+                record.scrap_at = timezone.now()
+                record.reason = form.cleaned_data['reason']
+                record.save()
+                device.status = 2
+                device.save()
+                return HttpResponseRedirect('/scrap/'+str(record.id)+'?msg=scrap success')
+            else:
+                return HttpResponseRedirect('/device/'+str(device.id)+'/scrap?msg='+str(form.errors))
+    
+    return HttpResponseBadRequest()
 
 # 报废记录列表
 @login_required()

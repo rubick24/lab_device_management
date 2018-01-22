@@ -56,7 +56,9 @@
                         <li style="float:left;padding:3px 5px;"><a href="/device/{{ device.id }}" title="设备详情" class="btn-floating green"><i class="material-icons">visibility</i></a></li>
                         {% if device.status == 0 %}
                         <li style="float:left;padding:3px 5px;"><a href="/device/{{ device.id }}/repair" title="维修设备" class="btn-floating yellow"><i class="material-icons">build</i></a></li>
-                        <li style="float:left;padding:3px 5px;"><a href="/device/{{ device.id }}/scrap" title="报废设备" class="btn-floating red"><i class="material-icons">delete</i></a></li>
+                            {% if perms.lab.manager_rights %}  
+                                <li style="float:left;padding:3px 5px;"><a href="/device/{{ device.id }}/scrap" title="报废设备" class="btn-floating red"><i class="material-icons">delete</i></a></li>
+                            {% endif %}
                         {% endif %}
                     </ul>
                 </td>

@@ -86,43 +86,46 @@
     {% endif %}
 </ul>
 <div class="row">
-    {% if apply.status == 0 %}
-        <div class="col s6" style="text-align:center">
-            <button id="accept" style="width:40%" class="waves-effect waves-light btn">接受申请</button>
-        </div>
-        <div class="col s6" style="text-align:center">
-            <button id="refuse" style="width:40%;background:#F0F0F0;color:#555" class="waves-effect waves-light btn">拒绝申请</button>
-        </div>
-        <script>
-            $("#accept").click(function(){
-                $.post('/apply/{{apply.id}}/accept',
-                {csrfmiddlewaretoken: '{{ csrf_token }}'},
-                function(data,status){
-                    window.location.reload()
-                });
-            })
-            $("#refuse").click(function(){
-                $.post('/apply/{{apply.id}}/refuse',
-                {csrfmiddlewaretoken: '{{ csrf_token }}'},
-                function(data,status){
-                    window.location.reload()
-                });
-            })
-        </script>
-    {% endif %}
-    {% if apply.status == 1 %}
-        <div class="col s12" style="text-align:center">
-            <button id="finish" style="width:40%" class="waves-effect waves-light btn">完成申请</button>
-        </div>
-        <script>
-            $("#finish").click(function(){
-                $.post('/apply/{{apply.id}}/finish',
-                {csrfmiddlewaretoken: '{{ csrf_token }}'},
-                function(data,status){
-                    window.location.reload()
-                });
-            })
-        </script>
+    {% if perms.lab.manager_rights %}
+        {% if apply.status == 0 %}
+        
+            <div class="col s6" style="text-align:center">
+                <button id="accept" style="width:40%" class="waves-effect waves-light btn">接受申请</button>
+            </div>
+            <div class="col s6" style="text-align:center">
+                <button id="refuse" style="width:40%;background:#F0F0F0;color:#555" class="waves-effect waves-light btn">拒绝申请</button>
+            </div>
+            <script>
+                $("#accept").click(function(){
+                    $.post('/apply/{{apply.id}}/accept',
+                    {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    function(data,status){
+                        window.location.reload()
+                    });
+                })
+                $("#refuse").click(function(){
+                    $.post('/apply/{{apply.id}}/refuse',
+                    {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    function(data,status){
+                        window.location.reload()
+                    });
+                })
+            </script>
+        {% endif %}
+        {% if apply.status == 1 %}
+            <div class="col s12" style="text-align:center">
+                <button id="finish" style="width:40%" class="waves-effect waves-light btn">完成申请</button>
+            </div>
+            <script>
+                $("#finish").click(function(){
+                    $.post('/apply/{{apply.id}}/finish',
+                    {csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    function(data,status){
+                        window.location.reload()
+                    });
+                })
+            </script>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}

@@ -67,8 +67,10 @@
                 <div style="text-align:center">
                     {% if device.status == 0 %}
                     <a  href="/device/{{ device.id }}/repair" title="维修设备" class="btn-floating yellow"><i class="material-icons">build</i></a>
-                    <span style="padding: 0 20px" > </span>
-                    <a href="/device/{{ device.id }}/scrap" title="报废设备" class="btn-floating red"><i class="material-icons">delete</i></a>
+                        {% if perms.lab.manager_rights %}
+                        <span style="padding: 0 20px" > </span>
+                        <a href="/device/{{ device.id }}/scrap" title="报废设备" class="btn-floating red"><i class="material-icons">delete</i></a>
+                        {% endif %}
                     {% elif device.status == 1  %}
                     <a href="/repair/{{ repair.id }}" class="waves-effect waves-light btn">维修详情</a>
                     {% else %}

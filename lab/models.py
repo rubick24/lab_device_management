@@ -1,5 +1,17 @@
 from django.db import models
 
+class RightsSupport(models.Model):
+
+    class Meta:
+        managed = False  # No database table creation or deletion operations \
+                         # will be performed for this model. 
+
+        permissions = ( 
+            ('admin_rigths', 'Global admin rights'),  
+            ('manager_rights', 'Global manager rights'), 
+            ('any_rights', 'Global any rights'), 
+        )
+
 class DeviceType(models.Model):
     name = models.CharField(max_length=200)
     def __str__(self):
