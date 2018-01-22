@@ -54,9 +54,8 @@ def user_register(request):
 def user_login(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
-    next_page = request.GET.get('next')
     if request.method == 'GET':
-        return render(request,'login.html',{'next_page':next_page})
+        return render(request,'login.html')
     else:
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -65,9 +64,6 @@ def user_login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return HttpResponseRedirect(next_page)
-                if next_page is not None and next_page != '':
-                    return HttpResponseRedirect(next_page)
                 return HttpResponseRedirect('/?msg=welcome '+user.username)
             else:
                 return HttpResponseRedirect('/login?msg=authenticate failed')

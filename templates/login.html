@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col s12 m8 offset-m2">
-        <form method="post" action="/login?next={{ next_page }}">
+        <form method="post" action="/login">
             {% csrf_token %}
             <div class="card">
                 <div class="card-content">
