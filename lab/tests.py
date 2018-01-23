@@ -27,7 +27,8 @@ class UserTestCase(TestCase):
 class DeviceTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        User.objects.create_user('user1', 'email@example.com', 'password')
+        User.objects.create_user('user1', 'email@example.com', 'password',is_superuser=True)
+       
         self.client.login(username='user1', password='password')
         device_type = DeviceType.objects.create(name='type1')
         Device.objects.create(name='device1',device_type=device_type,model='model1', manager='manager1',manufacturer='manufacturer1',purchase_at=timezone.now())
@@ -63,10 +64,11 @@ class DeviceTestCase(TestCase):
         self.assertEqual(scrap_record.reason,'swap new one')
 
 
+
 class ApplyTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        User.objects.create_user('user1', 'email@example.com', 'password')
+        User.objects.create_user('user1', 'email@example.com', 'password',is_superuser=True)
         self.client.login(username='user1', password='password')
         device_type = DeviceType.objects.create(name='type1')
         ApplyRecord.objects.create(

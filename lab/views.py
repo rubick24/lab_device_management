@@ -30,7 +30,7 @@ def index(request):
 #用户注册
 @require_http_methods(["GET","POST"])
 def user_register(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return HttpResponseRedirect('/')
     if request.method == 'GET':
         return render(request,'register.html')
@@ -52,7 +52,7 @@ def user_register(request):
 #用户登录
 @require_http_methods(["GET","POST"])
 def user_login(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return HttpResponseRedirect('/')
     if request.method == 'GET':
         return render(request,'login.html')
